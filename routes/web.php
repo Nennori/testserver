@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/login', function () {
+    return response()->json(['error' => 'Unauthenticated.'], 401);
+})->name('login');
 Route::get('login/{driver}', 'API\AuthController@redirectToProvider')->name('auth.social');
 Route::get('login/{driver}/callback', 'API\AuthController@handleProviderCallback')->name('auth.social.callback');
 Route::get('/', function () {

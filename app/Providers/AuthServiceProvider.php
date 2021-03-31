@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+use App\Policies\BoardPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
@@ -14,11 +15,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        Board::class => BoardPolicy::class,
     ];
     public function register()
     {
-        
+        $this->registerPolicies();
     }
 
     /**
@@ -28,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-        
+
+
     }
 }

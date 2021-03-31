@@ -9,21 +9,14 @@ class RolesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-       
+    public function run() {
         DB::table('roles')->insert([
-            'name' => 'administrator', 
+            'name' => 'owner',
             'edit_board' => true,
             'edit_task' => true
         ]);
         DB::table('roles')->insert([
-            'name' => 'owner', 
-            'edit_board' => true,
-            'edit_task' => true
-        ]);
-        DB::table('roles')->insert([
-            'name' => 'user', 
+            'name' => 'user',
             'edit_board' => false,
             'edit_task' => true
         ]);

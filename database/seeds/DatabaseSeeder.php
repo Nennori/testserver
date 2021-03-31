@@ -10,14 +10,8 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+
+    public function run() {
         $this->call(RolesTableSeeder::class);
-        
-        // factory(App\User::class, )->create()->each(function($user){
-        //     $user->boards()->
-        // })
-        //$this->call('AdminTablesSeeder');
     }
-    //"Vendor\\Encore\\Laravel-admin\\Auth\\Database\\": "database/seeds/"
 }

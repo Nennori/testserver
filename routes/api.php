@@ -20,17 +20,16 @@ Route::post('refresh', 'API\AuthController@refresh');
 
 
 Route::middleware('auth:api')->group(function(){
-   // Route::resource('boards', 'API\BoardController');
     Route::get('user', 'API\AuthController@getUser');
     Route::put('user', 'API\AuthController@editUser');
     Route::get('boards', 'API\BoardController@index');
     Route::post('boards', 'API\BoardController@store');
-    Route::put('boards/{boardId}', 'API\BoardController@update');
-    Route::post('boards/{boardId}/add-user', 'API\BoardController@addUser');
-    Route::post('boards/{boardId}/add-status', 'API\BoardController@addStatus');
-    Route::delete('boards/{boardId}/delete-status', 'API\BoardController@deleteStatus');
-    Route::delete('boards/{boardId}', 'API\BoardController@destroy');
-    Route::delete('boards/{boardId}/delete-user', 'API\BoardController@deleteUser');
+    Route::put('boards/{board}', 'API\BoardController@update');
+    Route::post('boards/{board}/add-user', 'API\BoardController@addUser');
+    Route::post('boards/{board}/add-status', 'API\BoardController@addStatus');
+    Route::delete('boards/{board}/delete-status', 'API\BoardController@deleteStatus');
+    Route::delete('boards/{board}', 'API\BoardController@destroy');
+    Route::delete('boards/{board}/delete-user', 'API\BoardController@deleteUser');
 });
 
 Route::middleware(['auth:api'])->group(function(){
@@ -42,8 +41,8 @@ Route::middleware(['auth:api'])->group(function(){
     Route::post('boards/{boardId}/tasks/{taskId}/add-user', 'API\TaskController@addUser');
     Route::delete('boards/{boardId}/tasks/{taskId}/delete-user', 'API\TaskController@deleteUser');
     Route::delete('boards/{boardId}/tasks/{taskId}', 'API\TaskController@destroy');
-    
-    
+
+
 });
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
