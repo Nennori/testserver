@@ -2,32 +2,39 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller as Controller;
-use GuzzleHttp\Exception\BadResponseException;
 
 class BaseController extends Controller
 {
     /**
-     * success response method.
+     * success response method
      *
-     * @return \Illuminate\Http\Response
+     * @param $result
+     * @param $message
+     * @param $status
+     * @return JsonResponse
      */
-    public function sendResponse($result, $message)
+
+    public function sendSuccess($result, $message, $status): JsonResponse
     {
         $response = [
         'success' => true,
         'data' => $result,
-        'message' => $message,
-    ];
-        return response()->json($response, 200);
+        'message' => $message
+        ];
+        return response()->json($response, $status);
     }
+
     /**
-     * return error response.
+     * error response method
      *
-     * @return \Illuminate\Http\Response
+     * @param $error
+     * @param $code
+     * @return JsonResponse
      */
-    public function sendError($error, $code)
+
+    public function sendError($error, $code): JsonResponse
     {
         $response = [
             'success' => false,

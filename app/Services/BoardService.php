@@ -14,6 +14,10 @@ use \Illuminate\Http\JsonResponse;
 
 class BoardService
 {
+    public function getBoards(User $user): array {
+        return $user->boards->all();
+    }
+
     public function createBoard(BoardRequest $request, User $user) {
         $board = new Board;
         $board->fill(['name' => $request->name]);
@@ -67,4 +71,25 @@ class BoardService
         return response()->json(['success' => true], 200);
     }
 
+    public function updateBoard(Board $board, array $data): JsonResponse {
+        $board->fill($data);
+        if ($board->save()) {
+            return response()->json(['success' => true, 'message' => 'Board updated successfully'], 200);
+        } else {
+            response()->json(['success' => false, 'message' => 'Board not updated'], 500);
+        }
+    }
+
+    public function deleteBoard(Board $board): JsonResponse {
+        $board->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteUser(User $user, Board $board): JsonResponse {
+        if ($user->boards()->detach($board)) {
+            return response()->json(['success' => true], 200);
+        } else {
+            return $this->sendError('Board not deleted', 500);
+        }
+    }
 }

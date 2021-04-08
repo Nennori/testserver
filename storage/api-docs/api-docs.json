@@ -231,7 +231,7 @@
             }
         },
         "login/{driver}": {
-            "post": {
+            "get": {
                 "summary": "User autorization with social networks",
                 "operationId": "App\\Http\\Controllers\\API\\AuthController::redirectToProvider",
                 "responses": {
@@ -424,13 +424,13 @@
                 }
             }
         },
-        "api/v1/boards/{boardId}/add-status": {
+        "api/v1/boards/{board}/add-status": {
             "post": {
                 "summary": "Add status to board.",
                 "operationId": "App\\Http\\Controllers\\API\\BoardController::addStatus",
                 "parameters": [
                     {
-                        "name": "boardId",
+                        "name": "board",
                         "in": "path",
                         "description": "board id",
                         "required": true,

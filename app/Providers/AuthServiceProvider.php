@@ -16,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Board::class => BoardPolicy::class,
+        Task::class => TaskPolicy::class
     ];
     public function register()
     {

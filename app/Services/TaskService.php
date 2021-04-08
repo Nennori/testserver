@@ -10,7 +10,11 @@ use App\Task;
 
 class TaskService
 {
-    public function createTask(TaskRequest $request, string $board){
+    public function getTasks($board) {
+        return $board->tasks->all();
+    }
+
+    public function createTask(TaskRequest $request, string $board) {
         $boardStatus = $this->findStatus($board, $request->status);
         if (!$boardStatus) {
             return response()->json(['success' => false, 'message' => 'No such status', 400]);
@@ -28,7 +32,7 @@ class TaskService
         $task->status()->associate($boardStatus);
     }
 
-    public function changeStatus(string $boardStatus, Task $task){
+    public function changeStatus(string $boardStatus, Task $task) {
         $task->status()->associate($boardStatus);
         $task->save();
     }
@@ -37,7 +41,7 @@ class TaskService
         return $board->statuses->where('name', $status)->first();
     }
 
-    public function sendEmails(User $user, string $boardStatus, Task $task, Board $board){
+    public function sendEmails(User $user, string $boardStatus, Task $task, Board $board) {
         $data = [
             'newStatus' => $boardStatus->name,
             'owner' => $user->name,
@@ -52,7 +56,7 @@ class TaskService
         }
     }
 
-    public function changeTask(Request $request, Board $board, Task $task){
+    public function changeTask(Request $request, Board $board, Task $task) {
         $task = $board->tasks->find($task->id);
         $task->fill($request->all())->save();
         if ($request->has('status')) {
@@ -60,6 +64,27 @@ class TaskService
             $this->changeStatus($boardStatus, $task);
         }
         return $task;
+    }
 
+    public function addUser($userId, Task $task) {
+        $user = User::find($userId);
+        if(!$user){
+            return response()->json(['success' => false, 'message'=>'User not found'], 400);
+        }
+        $task->users()->attach($user);
+        return response()->json(['success' => true], 200);
+    }
+
+    public function deleteTaskUser($userId, Task $task) {
+        $user = User::find($userId);
+        if(!$user){
+            return response()->json(['success' => false, 'message'=>'User not found'], 400);
+        }
+        $task->users()->detach($user);
+        response()->json(['success' => true], 200);
+    }
+
+    public function destroyTask(Task $task) {
+        $task->delete();
     }
 }

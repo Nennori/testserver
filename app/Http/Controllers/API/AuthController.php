@@ -5,12 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditUserRequest;
 use App\Services\UserService;
-use JWTAuth;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Http\Middleware\Check;
+use Tymon\JWTAuth\JWTAuth;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Requests\RegisterRequest;
 use \Illuminate\Http\JsonResponse;
-use Tymon\JWTAuth\JWTAuth;
 use Tymon\JWTAuth\Token;
 
 class AuthController extends Controller
@@ -32,32 +33,32 @@ class AuthController extends Controller
      *     path="register",
      *     summary="Register new user.",
      *     @OA\Parameter(
-     *     name="name",
-     *     in="query",
-     *     required=true,
-     *     description="name of the new user",
-     *     @OA\Schema(type="string")
+     *         name="name",
+     *         in="query",
+     *         required=true,
+     *         description="name of the new user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="email",
-     *     in="query",
-     *     required=true,
-     *     description="email of the new user",
-     *     @OA\Schema(type="string")
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *         description="email of the new user",
+     *         (type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="password",
-     *     in="query",
-     *     required=true,
-     *     description="password of the new user",
-     *     @OA\Schema(type="string")
+     *         name="password",
+     *         in="query",
+     *         required=true,
+     *         description="password of the new user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="c_password",
-     *     in="query",
-     *     required=true,
-     *     description="confirmation of user's password",
-     *     @OA\Schema(type="string")
+     *         name="c_password",
+     *         in="query",
+     *         required=true,
+     *         description="confirmation of user's password",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="User registered successfully"),
      *     @OA\Response(response="404", description="Validation error")
@@ -77,45 +78,45 @@ class AuthController extends Controller
      *     path="login",
      *     summary="Login user.",
      *     @OA\Parameter(
-     *     name="email",
-     *     in="query",
-     *     required=true,
-     *     description="email of the user",
-     *     @OA\Schema(type="string")
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *         description="email of the user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="password",
-     *     in="query",
-     *     required=true,
-     *     description="password of the user",
-     *     @OA\Schema(type="string")
+     *         name="password",
+     *         in="query",
+     *         required=true,
+     *         description="password of the user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="Access token"),
      *     @OA\Response(response="401", description="Unathorized")
-     *
      * )
      * @param Request $request
      * @return JsonResponse
      */
 
     public function login(Request $request): JsonResponse {
-        $data = [
+        $credentials = [
             'email' => $request->email,
-            'password' => $request->password
+            'password' => $request->password,
         ];
-        $tokens = $this->userService->generateTokens($data);
-        if (!$tokens) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized',
-            ], 401);
+        if (Auth::validate(['email'=>$credentials['email'], 'password'=>$credentials['password']])) {
+            $tokens = $this->userService->generateTokens($credentials);
+            if($tokens){
+                return response()->json([
+                    'success' => true,
+                    'access_token' => $tokens['access'],
+                    'refresh_token' => $tokens['refresh'],
+                ]);
+            }
         }
         return response()->json([
-            'success' => true,
-            'access_token' => $tokens['access'],
-            'refresh_token' => $tokens['refresh'],
-        ]);
-
+            'success' => false,
+            'message' => 'Unauthorized',
+        ], 401);
     }
 
     /**
@@ -123,21 +124,21 @@ class AuthController extends Controller
      *     path="logout",
      *     summary="Logout the current user.",
      *     @OA\Parameter(
-     *     name="Bearer Token",
-     *     in="header",
-     *     required=true,
-     *     @OA\Schema(type="string")
+     *         name="Bearer Token",
+     *         in="header",
+     *         required=true,
+     *         description="refresh token of the user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="refresh_token",
-     *     in="query",
-     *     required=true,
-     *     description="refresh token of the user",
-     *     @OA\Schema(type="string")
+     *         name='token',
+     *         in="body",
+     *         required=true,
+     *         description="access token of the user",
+     *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(response="200", description="Access token"),
+     *     @OA\Response(response="200", description="User successfully logged out"),
      *     @OA\Response(response="401", description="Unathorized")
-     *
      * )
      * @param Request $request
      * @return JsonResponse
@@ -146,7 +147,8 @@ class AuthController extends Controller
     public function logout(Request $request): JsonResponse {
         try {
             auth()->logout();
-            $accessToken = JWTAuth::parseToken();
+            $accessToken = $request->token;
+            auth()->setToken($accessToken)->logout();
             return response()->json([
                 'success' => true,
                 'message' => 'User logged out successfully'
@@ -157,7 +159,6 @@ class AuthController extends Controller
                 'message' => 'Sorry, the user cannot be logged out'
             ], 500);
         }
-
     }
 
     /**
@@ -165,27 +166,39 @@ class AuthController extends Controller
      *     path="refresh",
      *     summary="Refresh user's tokens.",
      *     @OA\Parameter(
-     *     name="Bearer Token",
-     *     in="header",
-     *     required=true,
-     *     @OA\Schema(type="string")
+     *         name="Bearer Token",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="Access and refresh tokens"),
      *     @OA\Response(response="401", description="Unathorized")
-     *
      * )
      * @param Request $request
      * @return JsonResponse
      */
 
     public function refresh(Request $request): JsonResponse {
-        $tokens = auth()->refresh();
-
+        $user = auth()->user();
+        if($user !== null && auth()->payload()->get('type') === 'refresh') {
+            $data = [
+                'email' => $user->email
+            ];
+            auth()->invalidate(true);
+            $tokens = $this->userService->generateTokens($data);
+            if ($tokens) {
+                return response()->json([
+                    'success' => true,
+                    'access_token' => $tokens['access'],
+                    'refresh_token' => $tokens['refresh']
+                ]);
+            }
+        }
         return response()->json([
-            'success' => true,
-            'access_token' => $tokens['access_token'],
-            'refresh_token' => $tokens['refresh_token'],
-        ]);
+            'success' => false,
+            'message' => 'Unauthorized'
+        ], 401);
+
     }
 
     /**
@@ -193,28 +206,27 @@ class AuthController extends Controller
      *     path="user",
      *     summary="Get current user's personal informaiton.",
      *     @OA\Parameter(
-     *     name="Bearer Token",
-     *     in="header",
-     *     required=true,
-     *     @OA\Schema(type="string")
+     *         name="Bearer Token",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="name",
-     *     in="query",
-     *     required=false,
-     *     description="name of the user",
-     *     @OA\Schema(type="string")
+     *         name="name",
+     *         in="query",
+     *         required=false,
+     *         description="name of the user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="about",
-     *     in="query",
-     *     required=false,
-     *     description="description of the user",
-     *     @OA\Schema(type="string")
+     *         name="about",
+     *         in="query",
+     *         required=false,
+     *         description="description of the user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="User personal info"),
      *     @OA\Response(response="401", description="Unathorized")
-     *
      * )
      * @param Request $request
      * @return JsonResponse
@@ -234,24 +246,24 @@ class AuthController extends Controller
      *     path="user",
      *     summary="Change user's personal information.",
      *     @OA\Parameter(
-     *     name="Bearer Token",
-     *     in="header",
-     *     required=true,
-     *     @OA\Schema(type="string")
+     *         name="Bearer Token",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="name",
-     *     in="query",
-     *     required=false,
-     *     description="name of the user",
-     *     @OA\Schema(type="string")
+     *         name="name",
+     *         in="query",
+     *         required=false,
+     *         description="name of the user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *     name="about",
-     *     in="query",
-     *     required=false,
-     *     description="description of the user",
-     *     @OA\Schema(type="string")
+     *         name="about",
+     *         in="query",
+     *         required=false,
+     *         description="description of the user",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="User's changed personal info"),
      *     @OA\Response(response="401", description="Unathorized")
@@ -277,7 +289,6 @@ class AuthController extends Controller
      *     summary="User autorization with social networks",
      *     @OA\Response(response="200", description="User's changed personal info"),
      *     @OA\Response(response="401", description="Unathorized")
-     *
      * )
      * @param string $driver
      * @return mixed

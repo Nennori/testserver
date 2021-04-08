@@ -4,6 +4,8 @@
 namespace App\Services;
 use App\SocialAccount;
 use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
@@ -14,7 +16,7 @@ class UserService
     }
 
     public function createUser($credentials): User {
-        $user = new User();
+        $user = new User;
         $user->fill([
             'name'=>$credentials['name'],
             'email'=>$credentials['email'],
@@ -70,9 +72,9 @@ class UserService
         return !$email ? null : User::where('email', $email)->first();
     }
 
-    public function generateTokens(array $credentials){
-        $user = $this->verifyCredentials($credentials);
-        if ($user !== null){
+    public function generateTokens($credentials){
+        $user = User::where('email', $credentials['email'])->first();
+        if($user){
             $tokens['access']=auth()->claims(['type'=>'access'])->setTTL(config('jwt.ttl'))->tokenById($user->id);
             $tokens['refresh']=auth()->claims(['type'=>'refresh'])->setTTL(config('jwt.refresh_ttl'))->tokenById($user->id);
             return $tokens;
@@ -82,13 +84,4 @@ class UserService
         }
     }
 
-    public function verifyCredentials(array $credentials){
-        $user = User::where('email', $credentials['email'])->get();
-        if ($user!==null && password_verify($credentials['password'], $user->password)){
-            return $user;
-        }
-        else {
-            return null;
-        }
-    }
 }
