@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\ControllerException;
 use App\Http\Requests\StatusRequest;
 use App\Http\Requests\TaskRequest;
+use App\Http\Resources\MarkResource;
+use App\Http\Resources\TaskCollection;
+use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Task;
-use App\Board;
+use App\Models\Task;
+use App\Models\Board;
 use Illuminate\Http\Response;
 use Validator;
 
@@ -24,36 +28,63 @@ class TaskController extends BaseController
 
     /**
      * @OA\Get(
-     *     path="api/v1/boards/{boardId}/tasks",
+     *     path="/api/v1/boards/{boardId}/tasks",
+     *     operationId="getTasks",
      *     summary="Displays a listing of user's tasks",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
-     *         description="board id",
+     *         description="Board id",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Parameter(
-     *         name="Bearer Token",
-     *         in="header",
-     *         required=true,
-     *         @OA\Schema(type="int")
+     *     @OA\Response(
+     *         response="200",
+     *         description="List of user's boards",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/TaskCollection"
+     *         )
      *     ),
-     *     @OA\Response(response="200", description="List of user's tasks"),
-     *     @OA\Response(response="400", description="Board not found")
+     *     @OA\Response(
+     *         response="404",
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
      * )
      * @param Board $board
      * @return mixed
+     * @throws AuthorizationException
      */
-
     public function index(Board $board) {
         $this->authorize('getTask', $board);
-        return $this->taskService->getTasks();
+        $response = new TaskCollection($this->taskService->getTasks($board));
+        return response($response, 200);
     }
 
     /**
      * @OA\Get(
-     *     path="api/v1/boards/{boardId}/tasks/{taskId}",
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}",
+     *     operationId="getTask",
      *     summary="Show task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
@@ -65,54 +96,96 @@ class TaskController extends BaseController
      *         name="taskId",
      *         in="path",
      *         required=true,
-     *         description="task id",
+     *         description="Task id",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Parameter(
-     *         name="Bearer Token",
-     *         in="header",
-     *         required=true,
-     *         @OA\Schema(type="string")
+     *     @OA\Response(
+     *         response="200",
+     *         description="Task retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 title="data",
+     *                 description="Response data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     ref="#/components/schemas/TaskResource"
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 title="message",
+     *                 description="Response message",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="status",
+     *                 title="status",
+     *                 description="Response status",
+     *                 type="string",
+     *             ),
+     *         ),
      *     ),
-     *     @OA\Response(response="200", description="Task retrieved successfully"),
-     *     @OA\Response(response="400", description="Board or task not found")
-     *
+     *    @OA\Response(
+     *         response="401",
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
      * )
      * @param Board $board
      * @param Task $task
      * @return mixed
+     * @throws AuthorizationException
      */
-
     public function show(Board $board, Task $task) {
         $this->authorize('getTask', $board);
-        if (!$task) {
-            return $this->sendError('Task not found', 400);
-        }
-        return $this->sendSuccess($task->toArray(), 'Task retrieved successfully');
+//        if (!$task) {
+//            return $this->sendError('Task not found', 400);
+//        }
+        $response = new TaskResource($task);
+        return response()->success($response, 'Task retrieved successfully', 200);
     }
 
     /**
      * @OA\Post(
-     *     path="api/v1/boards/{boardId}/tasks",
+     *     path="/api/v1/boards/{boardId}/tasks",
+     *     operationId="createTask",
      *     summary="Create task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
      *         required=true,
-     *         description="board id",
+     *         description="Board id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="name",
      *         in="query",
      *         required=true,
-     *         description="task name",
+     *         description="Task name",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="description",
      *         in="query",
-     *         required=true,
      *         description="task description",
      *         @OA\Schema(type="string")
      *     ),
@@ -145,22 +218,27 @@ class TaskController extends BaseController
      * @param TaskRequest $request
      * @param Board $board
      * @return Response
+     * @throws AuthorizationException
+     * @throws ControllerException
      */
-
     public function store(TaskRequest $request, Board $board) {
         $this->authorize('storeTask', $board);
-        $task = $this->taskService()->createTask($request, $board);
+        $task = $this->taskService->createTask($request, $board);
         if ($task) {
-            return $this->sendResponse($task->toArray(), 'Task created successfully');
+            $response = new TaskResource($task);
+            return response()->success($response, 'Task created successfully', 200);
         } else {
-            return $this->sendError('Task not added', 500);
+            throw new ControllerException('Server error', 500);
         }
     }
 
     /**
      * @OA\Put(
-     *     path="api/v1/boards/{boardId}/tasks/{taskId}/status",
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}/status",
+     *     operationId="changeStatus",
      *     summary="Change status of the task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
@@ -182,12 +260,6 @@ class TaskController extends BaseController
      *         description="new status",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Parameter(
-     *         name="Bearer Token",
-     *         in="header",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
      *     @OA\Response(response="200", description="Status created successfully"),
      *     @OA\Response(response="400", description="Board, task or status not found")
      * )
@@ -199,56 +271,53 @@ class TaskController extends BaseController
      */
 
     public function changeStatus(StatusRequest $request, Board $board, Task $task) {
-        $this->authorize('changeStatus', $board, $task);
+        $this->authorize('changeStatus', [$task, $board]);
         $boardStatus = $this->taskService->findStatus($board, $request->status);
-        if (!$boardStatus) {
-            return response()->json(['success' => false, 'message' => 'No such status', 400]);
-        }
-        $this->taskService->changeStatus($boardStatus, $task);
+//        if (!$boardStatus) {
+//            return $this->sendError('No such status', 400);
+//        }
+        $response = new TaskResource($this->taskService->changeStatus($boardStatus, $task));
         $this->taskService->sendEmails(auth()->user(), $boardStatus, $task, $board);
-        return $this->sendResponse($boardStatus->toArray(), 'Status changed successfully');
+        return $this->success($response, 'Status changed successfully', 200);
     }
 
     /**
      * @OA\Put(
-     *     path="api/v1/boards/{boardId}/tasks/{taskId}",
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}",
+     *     operationId="updateTask",
      *     summary="Update task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
      *         required=true,
-     *         description="board id",
+     *         description="Board id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="taskId",
      *         in="path",
      *         required=true,
-     *         description="task id",
+     *         description="Task id",
      *     @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="name",
      *         in="query",
-     *         description="new task name",
+     *         description="New task name",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="description",
      *         in="query",
-     *         description="new task description",
+     *         description="New task description",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="status",
      *         in="query",
-     *         description="new task status",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="Bearer Token",
-     *         in="header",
-     *         required=true,
+     *         description="New task status",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="Status updated successfully"),
@@ -260,46 +329,45 @@ class TaskController extends BaseController
      * @param Task $task
      * @return Response
      * @throws AuthorizationException
+     * @throws ControllerException
      */
 
     public function update(TaskRequest $request, Board $board, Task $task) {
         $this->authorize('updateTask', $board);
         $task = $this->taskService->changeTask($request, $board, $task);
         if ($task) {
-            return $this->sendResponse($task->toArray(), 'Task updated successfully');
+            $response = new TaskResource($task);
+            return $this->success($response, 'Task updated successfully', 200);
         } else {
-            return $this->sendError('Task not updated', 500);
+            throw new ControllerException('Task not updated', 500);
         }
     }
 
     /**
      * @OA\Post(
-     *     path="api/v1/boards/{boardId}/tasks/{taskId}/user",
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}/user",
+     *     operationId="addTaskUser",
      *     summary="Add user to the task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
      *         required=true,
-     *         description="board id",
+     *         description="Board id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="taskId",
      *         in="path",
      *         required=true,
-     *         description="task id",
-     *         (type="string")
+     *         description="Task id",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="userId",
      *         in="path",
-     *         description="user id",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="Bearer Token",
-     *         in="header",
+     *         description="User id",
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
@@ -307,59 +375,95 @@ class TaskController extends BaseController
      *     @OA\Response(response="400", description="Board, task or user not found"),
      * )
      */
-
     public function addUser(Request $request, Board $board, Task $task) {
-        $this->authorize('addTaskUser', $board, $task);
+        $this->authorize('addTaskUser', [$board, $task]);
         $userId = $request->query('userId');
-        return  $this->taskService->addUser($userId, $task);
+        $response = new TaskResource($this->taskService->addUser($userId, $task));
+        return response()->success($response, 'User added successfully', 200);
     }
 
     /**
      * @OA\Delete(
-     *     path="api/v1/boards/{boardId}/tasks/{taskId}/user",
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}/user",
+     *     operationId="deleteTaskUser",
      *     summary="Delete user from the task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
      *         required=true,
-     *         description="board id",
+     *         description="Board id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="taskId",
      *         in="path",
      *         required=true,
-     *         description="task id",
+     *         description="Task id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="userId",
      *         in="path",
-     *         description="user id",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="Bearer Token",
-     *         in="header",
+     *         description="User id",
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="User deleted successfully"),
      *     @OA\Response(response="400", description="Board, task or user not found"),
      * )
+     * @param Request $request
+     * @param Board $board
+     * @param Task $task
+     * @return JsonResponse
+     * @throws AuthorizationException
+     * @throws ControllerException
      */
-
     public function deleteUser(Request $request, Board $board, Task $task) {
-        $this->authorize('deleteTaskUser', $board, $task);
+        $this->authorize('deleteTaskUser', [$board, $task]);
         $userId = $request->query('userId');
-        return $this->taskService->deleteTaskUser($userId, $task);
+        $response = new TaskResource($this->taskService->deleteTaskUser($userId, $task));
+        return response()->success($response, 'User deleted successfully', 200);
     }
 
     /**
      * @OA\Delete(
-     *     path="api/v1/boards/{boardId}/tasks/{taskId}",
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}",
+     *     operationId="deleteTask",
      *     summary="Delete task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="boardId",
+     *         in="path",
+     *         required=true,
+     *         description="board id",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="taskId",
+     *         in="path",
+     *         required=true,
+     *         description="task id",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="User deleted successfully"),
+     *     @OA\Response(response="400", description="Board, task or user not found"),
+     * )
+     */
+    public function destroy(Board $board, Task $task) {
+        $this->authorize('destroyTask', [$board, $task]);
+        $this->taskService->destroyTask($task);
+        return response()->success([], 'Task is deleted', 200);
+    }
+    /**
+     * @OA\Post(
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}/mark",
+     *     operationId="addTaskMark",
+     *     summary="Add mark to the task",
+     *     tags={"Task"},
+     *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",
      *         in="path",
@@ -375,19 +479,111 @@ class TaskController extends BaseController
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Bearer Token",
-     *         in="header",
+     *         name="name",
+     *         in="query",
      *         required=true,
+     *         description="mark name",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(response="200", description="User deleted successfully"),
-     *     @OA\Response(response="400", description="Board, task or user not found"),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Mark added successfully",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/TaskCollection"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
      * )
+     * @param Board $board
+     * @return JsonResponse|Response
+     * @throws ControllerException
      */
+    public function addMark(Request $request, Board $board, Task $task) {
+        $name = $request->query('name');
+        $color = $request->query('color');
+        $response = new TaskResource($this->taskService->addMark($board, $task, $name));
+        return response()->success($response, 'Mark added successfully', 200);
+    }
 
-    public function destroy(Board $board, Task $task) {
-        $this->authorize('destroyTask', $board, $task);
-        $this->destroyTask($task);
-        return response()->json(['success' => true]);
+    /**
+     * @OA\Delete(
+     *     path="/api/v1/boards/{boardId}/tasks/{taskId}/mark",
+     *     operationId="deleteTaskMark",
+     *     summary="Delete mark from the task",
+     *     tags={"Mark"},
+     *     security={ {"bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="boardId",
+     *         in="path",
+     *         required=true,
+     *         description="Board id",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="taskId",
+     *         in="path",
+     *         required=true,
+     *         description="task id",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         required=true,
+     *         description="Mark name",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="User deleted from the board successfully",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ControllerException"
+     *         )
+     *     ),
+     * )
+     * @param Request $request
+     * @param Board $board
+     * @param Task $task
+     * @return mixed
+     */
+    public function deleteMark(Request $request, Board $board, Task $task) {
+//        $this->authorize('deleteTask', $board);
+        $name= $request->query('name');
+        $this->taskService->deleteMark($board, $task, $name);
+        return response()->success([], 'Mark was deleted from the task', 200);
     }
 }

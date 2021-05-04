@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\ControllerException;
 use Closure;
 
 class CheckToken
@@ -19,9 +20,6 @@ class CheckToken
         if($user !== null && auth()->payload()->get('type') !== 'refresh') {
             return $next($request);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'Unauthorized'
-        ], 401);
+        return new ControllerException("Unauthorized", 401);
     }
 }

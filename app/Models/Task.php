@@ -1,12 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Concerns\UsesUuid;
 
 class Task extends Model
 {
-    use Concerns\UsesUuid;
+    use UsesUuid;
     //
         /**
      * The attributes that are mass assignable.
@@ -28,12 +29,15 @@ class Task extends Model
     protected $keyType = 'string';
 
     public function board(){
-        return $this->belongsTo('App\Board');
+        return $this->belongsTo('App\Models\Board');
     }
     public function users(){
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\Models\User')->withPivot('is_author');
     }
     public function status(){
-        return $this->belongsTo('App\Status');
+        return $this->belongsTo('App\Models\Status');
+    }
+    public function marks(){
+        return $this->belongsToMany('App\Models\Marks');
     }
 }

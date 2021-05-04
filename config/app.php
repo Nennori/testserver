@@ -51,7 +51,7 @@ return [
     | your application so that it is used when running Artisan tasks.
     |
     */
- 
+
     'url' => env('APP_URL', 'http://app.test'),
 
     'asset_url' => env('ASSET_URL', null),
@@ -168,7 +168,7 @@ return [
         /*
          * Package Service Providers...
          */
-        
+
         /*
          * Application Service Providers...
          */
@@ -177,8 +177,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        \SocialiteProviders\Manager\ServiceProvider::class, 
-        
+        \SocialiteProviders\Manager\ServiceProvider::class,
+        App\Providers\ResponseMacroServiceProvider::class,
 
     ],
 

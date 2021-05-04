@@ -1,13 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
     protected $fillable = [];
-    public function boardusers(){
-        return $this->hasMany('App\BoardUser');
-    }
+
 }

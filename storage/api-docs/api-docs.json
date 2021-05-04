@@ -5,281 +5,504 @@
         "version": "0.1"
     },
     "paths": {
-        "register": {
+        "/api/v1/register": {
             "post": {
-                "summary": "Register new user.",
-                "operationId": "App\\Http\\Controllers\\API\\AuthController::register",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "name of the new user",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "email of the new user",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "password of the new user",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "c_password",
-                        "in": "query",
-                        "description": "confirmation of user's password",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register new user",
+                "operationId": "register",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "name of the new user",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "email of the new user",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "password of the new user",
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "confirmation of user's password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
-                        "description": "User registered successfully"
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "access_token": {
+                                                        "title": "access token",
+                                                        "description": "Access token",
+                                                        "type": "string"
+                                                    },
+                                                    "refresh_token": {
+                                                        "title": "refresh token",
+                                                        "description": "Refresh token",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "login": {
+        "/api/v1/login": {
             "post": {
-                "summary": "Login user.",
-                "operationId": "App\\Http\\Controllers\\API\\AuthController::login",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "email of the user",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "password of the user",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login user",
+                "operationId": "login",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "email of the new user",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "password of the new user",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
-                        "description": "Access token"
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "access_token": {
+                                                        "title": "access token",
+                                                        "description": "Access token",
+                                                        "type": "string"
+                                                    },
+                                                    "refresh_token": {
+                                                        "title": "refresh token",
+                                                        "description": "Refresh token",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unathorized"
+                        "description": "Unathorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "logout": {
+        "/api/v1/logout": {
             "delete": {
-                "summary": "Logout the current user.",
-                "operationId": "App\\Http\\Controllers\\API\\AuthController::logout",
-                "parameters": [
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "refresh_token",
-                        "in": "query",
-                        "description": "refresh token of the user",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout the current user",
+                "operationId": "logout",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "description": "Access token of the user",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "200": {
-                        "description": "Access token"
+                        "description": "User successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unathorized"
+                        "description": "Unathorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "refresh": {
+        "/api/v1/refresh": {
             "post": {
-                "summary": "Refresh user's tokens.",
-                "operationId": "App\\Http\\Controllers\\API\\AuthController::refresh",
-                "parameters": [
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
+                "tags": [
+                    "Authentication"
                 ],
+                "summary": "Refresh user's tokens",
+                "operationId": "refresh",
                 "responses": {
                     "200": {
-                        "description": "Access and refresh tokens"
+                        "description": "Access and refresh tokens",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "access_token": {
+                                                        "title": "access token",
+                                                        "description": "Access token",
+                                                        "type": "string"
+                                                    },
+                                                    "refresh_token": {
+                                                        "title": "refresh token",
+                                                        "description": "Refresh token",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unathorized"
-                    }
-                }
-            }
-        },
-        "user": {
-            "get": {
-                "summary": "Get current user's personal informaiton.",
-                "operationId": "App\\Http\\Controllers\\API\\AuthController::getUser",
-                "parameters": [
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "name of the user",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "about",
-                        "in": "query",
-                        "description": "description of the user",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
+                        "description": "Unathorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User personal info"
-                    },
-                    "401": {
-                        "description": "Unathorized"
-                    }
-                }
-            },
-            "post": {
-                "summary": "Change user's personal information.",
-                "operationId": "App\\Http\\Controllers\\API\\AuthController::editUser",
-                "parameters": [
+                },
+                "security": [
                     {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "name of the user",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "about",
-                        "in": "query",
-                        "description": "description of the user",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "bearerAuth": []
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User's changed personal info"
-                    },
-                    "401": {
-                        "description": "Unathorized"
-                    }
-                }
+                ]
             }
         },
         "login/{driver}": {
             "get": {
+                "tags": [
+                    "Third-party authorization"
+                ],
                 "summary": "User autorization with social networks",
-                "operationId": "App\\Http\\Controllers\\API\\AuthController::redirectToProvider",
+                "operationId": "loginThirdParty",
                 "responses": {
                     "200": {
                         "description": "User's changed personal info"
                     },
                     "401": {
-                        "description": "Unathorized"
+                        "description": "Unathorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "api/v1/boards": {
+        "/api/v1/boards": {
             "get": {
-                "summary": "Displays a listing of user's boards.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::index",
-                "parameters": [
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "int"
-                        }
-                    }
+                "tags": [
+                    "Board"
                 ],
+                "summary": "Displays a listing of user's boards",
+                "operationId": "getBoards",
                 "responses": {
                     "200": {
-                        "description": "List of user's boards."
+                        "description": "List of user's boards",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BoardCollection"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
-                "summary": "Add new user board.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::store",
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Add new board",
+                "operationId": "addBoard",
                 "parameters": [
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "name of the new board",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
+                        "description": "Name of the new board",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -287,24 +510,76 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Create board successfully"
+                    "201": {
+                        "description": "Board created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BoardResource"
+                                            }
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
-                    "404": {
-                        "description": "Validation error"
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "api/v1/boards/{boardId}": {
+        "/api/v1/boards/{boardId}": {
             "put": {
-                "summary": "Update user board.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::update",
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Update board",
+                "operationId": "updateBoard",
                 "parameters": [
                     {
                         "name": "boardId",
                         "in": "path",
-                        "description": "board id",
+                        "description": "Board id",
                         "schema": {
                             "type": "string"
                         }
@@ -312,54 +587,111 @@
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "new name of the board",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
+                        "description": "New name of the board",
                         "schema": {
                             "type": "string"
                         }
                     }
                 ],
                 "responses": {
-                    "400": {
-                        "description": "Board not found"
-                    },
                     "200": {
-                        "description": "Board updated successfully"
-                    },
-                    "500": {
-                        "description": "Board not updated"
-                    },
-                    "403": {
-                        "description": "User have hot permission to update the board"
+                        "description": "Board updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BoardResource"
+                                            }
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Validation error"
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
-                "summary": "Delete user's board.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::destroy",
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Delete user's board",
+                "operationId": "deleteBoard",
                 "parameters": [
                     {
                         "name": "boardId",
                         "in": "path",
-                        "description": "board id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
+                        "description": "Board id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -367,179 +699,176 @@
                     }
                 ],
                 "responses": {
-                    "400": {
-                        "description": "Board not found"
-                    },
                     "200": {
-                        "description": "Board deleted successfully"
-                    },
-                    "403": {
-                        "description": "User have hot permission to delete board"
-                    }
-                }
-            }
-        },
-        "api/v1/boards/{boardId}/add-user": {
-            "post": {
-                "summary": "Add user to board.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::addUser",
-                "parameters": [
-                    {
-                        "name": "boardId",
-                        "in": "path",
-                        "description": "board id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                        "description": "Board deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
                         }
-                    },
-                    {
-                        "name": "userId",
-                        "in": "path",
-                        "description": "user id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "400": {
-                        "description": "Board or user not found"
-                    },
-                    "200": {
-                        "description": "User added to the board successfully"
-                    },
-                    "403": {
-                        "description": "User have hot permission to add user to this board"
-                    }
-                }
-            }
-        },
-        "api/v1/boards/{board}/add-status": {
-            "post": {
-                "summary": "Add status to board.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::addStatus",
-                "parameters": [
-                    {
-                        "name": "board",
-                        "in": "path",
-                        "description": "board id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "path",
-                        "description": "name of status",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "int"
-                        }
-                    }
-                ],
-                "responses": {
-                    "400": {
-                        "description": "Board not found"
-                    },
-                    "409": {
-                        "description": "Status is already exist"
-                    },
-                    "200": {
-                        "description": "Status added to the board successfully"
-                    },
-                    "403": {
-                        "description": "User have hot permission to add status to this board"
                     },
                     "404": {
-                        "description": "Validation error"
-                    }
-                }
-            }
-        },
-        "api/v1/boards/{boardId}/delete-status": {
-            "delete": {
-                "summary": "Delete status from user's board.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::deleteStatus",
-                "parameters": [
-                    {
-                        "name": "boardId",
-                        "in": "path",
-                        "description": "board id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
                         }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "name of status",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "400": {
-                        "description": "Board or status not found"
-                    },
-                    "409": {
-                        "description": "Status cannot be deleted because there are tasks that have it"
-                    },
-                    "200": {
-                        "description": "Status deleted from the board successfully"
                     },
                     "403": {
-                        "description": "User have hot permission to add status to this board"
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "api/v1/boards/{boardId}/delete-user": {
-            "delete": {
-                "summary": "Exit from board.",
-                "operationId": "App\\Http\\Controllers\\API\\BoardController::deleteUser",
+        "/api/v1/boards/{boardId}/user": {
+            "post": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Add user to the board",
+                "operationId": "addBoardUser",
                 "parameters": [
                     {
                         "name": "boardId",
                         "in": "path",
-                        "description": "board id",
+                        "description": "Board id",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pass user and role",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "User email",
+                                        "type": "string"
+                                    },
+                                    "role": {
+                                        "description": "User role at the board",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User added to the board successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BoardResource"
+                                            }
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
                     {
-                        "name": "Bearer Token",
-                        "in": "header",
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Exit from board",
+                "operationId": "deleteUserFromBoard",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -547,52 +876,296 @@
                     }
                 ],
                 "responses": {
-                    "400": {
-                        "description": "Board not found"
+                    "200": {
+                        "description": "User deleted from the board successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Board not deleted"
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     },
-                    "200": {
-                        "description": "User deleted from the board successfully"
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "api/v1/boards/{boardId}/tasks": {
+        "/api/v1/boards/{boardId}/status": {
             "get": {
-                "summary": "Displays a listing of user's tasks.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::index",
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Get list of statuses",
+                "operationId": "getStatuses",
                 "parameters": [
                     {
                         "name": "boardId",
                         "in": "path",
                         "description": "board id",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
                         "required": true,
                         "schema": {
-                            "type": "int"
+                            "type": "string"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of user's tasks"
+                        "description": "Board deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatusCollection"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Board not found"
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
-                "summary": "Creates task.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::store",
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Add status to the board",
+                "operationId": "addStatus",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Name of status",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status added to the board successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatusCollection"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Delete status from user's board",
+                "operationId": "deleteStatus",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Name of status",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status deleted from the board successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Status cannot be deleted because there are tasks",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/boards/{boardId}/mark": {
+            "post": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Add mark",
+                "operationId": "addMark",
                 "parameters": [
                     {
                         "name": "boardId",
@@ -606,7 +1179,220 @@
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "task name",
+                        "description": "mark name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "color",
+                        "in": "query",
+                        "description": "mark color",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mark added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MarkCollection"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "Delete board mark",
+                "operationId": "deleteMark",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Mark name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted from the board successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/boards/{boardId}/tasks": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Displays a listing of user's tasks",
+                "operationId": "getTasks",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user's boards",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskCollection"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Create task",
+                "operationId": "createTask",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Task name",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -616,7 +1402,6 @@
                         "name": "description",
                         "in": "query",
                         "description": "task description",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -664,13 +1449,21 @@
                     "403": {
                         "description": "User have not permission to create new task"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "api/v1/boards/{boardId}/tasks/{taskId}": {
+        "/api/v1/boards/{boardId}/tasks/{taskId}": {
             "get": {
-                "summary": "Shows task.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::show",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Show task",
+                "operationId": "getTask",
                 "parameters": [
                     {
                         "name": "boardId",
@@ -684,15 +1477,7 @@
                     {
                         "name": "taskId",
                         "in": "path",
-                        "description": "task id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
+                        "description": "Task id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -701,21 +1486,83 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Task retrieved successfully"
+                        "description": "Task retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Response data",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TaskResource"
+                                            }
+                                        },
+                                        "message": {
+                                            "title": "message",
+                                            "description": "Response message",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "title": "status",
+                                            "description": "Response status",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
-                    "400": {
-                        "description": "Board or task not found"
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
-                "summary": "Updates task.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::update",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Update task",
+                "operationId": "updateTask",
                 "parameters": [
                     {
                         "name": "boardId",
                         "in": "path",
-                        "description": "board id",
+                        "description": "Board id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -724,7 +1571,7 @@
                     {
                         "name": "taskId",
                         "in": "path",
-                        "description": "task id",
+                        "description": "Task id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -733,7 +1580,7 @@
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "new task name",
+                        "description": "New task name",
                         "schema": {
                             "type": "string"
                         }
@@ -741,7 +1588,7 @@
                     {
                         "name": "description",
                         "in": "query",
-                        "description": "new task description",
+                        "description": "New task description",
                         "schema": {
                             "type": "string"
                         }
@@ -749,15 +1596,7 @@
                     {
                         "name": "status",
                         "in": "query",
-                        "description": "new task status",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
+                        "description": "New task status",
                         "schema": {
                             "type": "string"
                         }
@@ -773,11 +1612,19 @@
                     "500": {
                         "description": "Task not updated"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
-                "summary": "Delete task.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::destroy",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Delete task",
+                "operationId": "deleteTask",
                 "parameters": [
                     {
                         "name": "boardId",
@@ -796,14 +1643,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -813,13 +1652,21 @@
                     "400": {
                         "description": "Board, task or user not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "api/v1/boards/{boardId}/tasks/{taskId}/change-status": {
+        "/api/v1/boards/{boardId}/tasks/{taskId}/status": {
             "put": {
-                "summary": "Change status of the task.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::changeStatus",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Change status of the task",
+                "operationId": "changeStatus",
                 "parameters": [
                     {
                         "name": "boardId",
@@ -847,14 +1694,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -864,18 +1703,26 @@
                     "400": {
                         "description": "Board, task or status not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "api/v1/boards/{boardId}/tasks/{taskId}/add-user": {
+        "/api/v1/boards/{boardId}/tasks/{taskId}/user": {
             "post": {
-                "summary": "Add user to the task.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::addUser",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Add user to the task",
+                "operationId": "addTaskUser",
                 "parameters": [
                     {
                         "name": "boardId",
                         "in": "path",
-                        "description": "board id",
+                        "description": "Board id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -884,7 +1731,7 @@
                     {
                         "name": "taskId",
                         "in": "path",
-                        "description": "task id",
+                        "description": "Task id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -893,15 +1740,7 @@
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "user id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
+                        "description": "User id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -915,13 +1754,70 @@
                     "400": {
                         "description": "Board, task or user not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Delete user from the task",
+                "operationId": "deleteTaskUser",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "Task id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "User id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully"
+                    },
+                    "400": {
+                        "description": "Board, task or user not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "api/v1/boards/{boardId}/tasks/{taskId}/delete-user": {
-            "delete": {
-                "summary": "Delete user from the task.",
-                "operationId": "App\\Http\\Controllers\\API\\TaskController::deleteUser",
+        "/api/v1/boards/{boardId}/tasks/{taskId}/mark": {
+            "post": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Add mark to the task",
+                "operationId": "addTaskMark",
                 "parameters": [
                     {
                         "name": "boardId",
@@ -942,17 +1838,9 @@
                         }
                     },
                     {
-                        "name": "userId",
-                        "in": "path",
-                        "description": "user id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Bearer Token",
-                        "in": "header",
+                        "name": "name",
+                        "in": "query",
+                        "description": "mark name",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -961,17 +1849,541 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User deleted successfully"
+                        "description": "Mark added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskCollection"
+                                }
+                            }
+                        }
                     },
-                    "400": {
-                        "description": "Board, task or user not found"
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Mark"
+                ],
+                "summary": "Delete mark from the task",
+                "operationId": "deleteTaskMark",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "Board id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "task id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Mark name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted from the board successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "api/v1/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get current user's personal informaiton",
+                "operationId": "getUser",
+                "responses": {
+                    "200": {
+                        "description": "User personal info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDetailResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Change user's personal information",
+                "operationId": "editUser",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the user",
+                                        "type": "string"
+                                    },
+                                    "about": {
+                                        "description": "Description of the user",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User's personal info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDetailResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ControllerException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
     "components": {
+        "schemas": {
+            "ControllerException": {
+                "title": "ControllerException",
+                "description": "ControllerException model",
+                "properties": {
+                    "message": {
+                        "title": "message",
+                        "description": "Response message",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "status",
+                        "description": "Response status",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "ControllerException"
+                }
+            },
+            "BoardCollection": {
+                "title": "BoardCollection",
+                "description": "BoardCollection model",
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "description": "Response data",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BoardResource"
+                        }
+                    },
+                    "message": {
+                        "title": "message",
+                        "description": "Response message",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "status",
+                        "description": "Response status",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "BoardCollection"
+                }
+            },
+            "BoardResource": {
+                "title": "BoardResource",
+                "description": "BoardResource model",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "users": {
+                        "description": "Users that in the board",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BoardResource"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "BoardResource"
+                }
+            },
+            "MarkCollection": {
+                "title": "MarkCollection",
+                "description": "MarkCollection model",
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "description": "Response data",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MarkResource"
+                        }
+                    },
+                    "message": {
+                        "title": "message",
+                        "description": "Response message",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "status",
+                        "description": "Response status",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "MarkCollection"
+                }
+            },
+            "MarkResource": {
+                "title": "MarkResource",
+                "description": "MarkResource model",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "color": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "MarkResource"
+                }
+            },
+            "StatusCollection": {
+                "title": "StatusCollection",
+                "description": "StatusCollection model",
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "description": "Response data",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/StatusResource"
+                        }
+                    },
+                    "message": {
+                        "title": "message",
+                        "description": "Response message",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "status",
+                        "description": "Response status",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "StatusCollection"
+                }
+            },
+            "StatusResource": {
+                "title": "StatusResource",
+                "description": "StatusResource model",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "StatusResource"
+                }
+            },
+            "TaskCollection": {
+                "title": "TaskCollection",
+                "description": "TaskCollection model",
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "description": "Response data",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TaskResource"
+                        }
+                    },
+                    "message": {
+                        "title": "message",
+                        "description": "Response message",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "status",
+                        "description": "Response status",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "TaskCollection"
+                }
+            },
+            "TaskResource": {
+                "title": "TaskResource",
+                "description": "TaskResource model",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/StatusResource"
+                    },
+                    "expired_at": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "executor": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "marks": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MarkResource"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "TaskResource"
+                }
+            },
+            "UserCollection": {
+                "title": "UserCollection",
+                "description": "UserCollection model",
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "description": "Response data",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UserResource"
+                        }
+                    },
+                    "message": {
+                        "title": "message",
+                        "description": "Response message",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "status",
+                        "description": "Response status",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserCollection"
+                }
+            },
+            "UserDetailResource": {
+                "title": "UserDetailResource",
+                "description": "UserDetailResource model",
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "description": "Response data",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "about": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "message": {
+                        "title": "message",
+                        "description": "Response message",
+                        "type": "string"
+                    },
+                    "status": {
+                        "title": "status",
+                        "description": "Response status",
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserDetailResource"
+                }
+            },
+            "UserResource": {
+                "title": "UserResource",
+                "description": "UserResource model",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserResource"
+                }
+            }
+        },
         "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
             "passport": {
                 "type": "oauth2",
                 "description": "Laravel passport oauth2 security.",

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateMarksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,14 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('marks', function (Blueprint $table) {
             $table->uuid('id');
             $table->primary('id');
             $table->string('name');
-            $table->string('about');
-            $table->string('email')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->string('color')->default('#53DF00');
+            $table->uuid('board_id');
+            $table->foreign('board_id')->references('id')->on('boards')->onDelete('cascade');
         });
-
     }
 
     /**
@@ -33,7 +30,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
-
+        Schema::dropIfExists('marks');
     }
 }

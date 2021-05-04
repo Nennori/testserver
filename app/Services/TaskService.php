@@ -4,23 +4,32 @@
 namespace App\Services;
 
 
+use App\Exceptions\ControllerException;
+use App\Models\Board;
 use App\Http\Requests\TaskRequest;
 use App\Jobs\SendEmailJob;
-use App\Task;
+use App\Models\Task;
+use App\Models\User;
 
 class TaskService
 {
-    public function getTasks($board) {
+    protected $apiRequest;
+
+    public function __construct(APIRequest $apiRequest) {
+        $this->apiRequest = $apiRequest;
+    }
+
+    public function getTasks(Board $board) {
         return $board->tasks->all();
     }
 
-    public function createTask(TaskRequest $request, string $board) {
+    public function createTask(TaskRequest $request, Board $board) {
         $boardStatus = $this->findStatus($board, $request->status);
-        if (!$boardStatus) {
-            return response()->json(['success' => false, 'message' => 'No such status', 400]);
-        }
+//        if (!$boardStatus) {
+//            return response()->json(['success' => false, 'message' => 'No such status', 400]);
+//        }
         $taskCount = count($board->tasks) + 1;
-        $taskNumber = $this->APIRequest->sendAPIRequest('http://numbersapi.com/', (string)$taskCount . '/trivia');
+        $taskNumber = $this->apiRequest->sendAPIRequest('http://numbersapi.com/', (string)$taskCount . '/trivia');
         $task = new Task;
         $task->fill([
             'task_number' => (string)$taskNumber,
@@ -30,15 +39,17 @@ class TaskService
         ])->save();
         $task->board()->associate($board);
         $task->status()->associate($boardStatus);
+        return $task;
     }
 
     public function changeStatus(string $boardStatus, Task $task) {
         $task->status()->associate($boardStatus);
         $task->save();
+        return $task;
     }
 
     public function findStatus(Board $board, string $status){
-        return $board->statuses->where('name', $status)->first();
+        return $board->statuses()->where('name', $status)->firstOrFail();
     }
 
     public function sendEmails(User $user, string $boardStatus, Task $task, Board $board) {
@@ -56,35 +67,53 @@ class TaskService
         }
     }
 
-    public function changeTask(Request $request, Board $board, Task $task) {
+    public function changeTask(TaskRequest $request, Board $board, Task $task) {
         $task = $board->tasks->find($task->id);
         $task->fill($request->all())->save();
         if ($request->has('status')) {
-            $boardStatus=findStatus($board, $request->status);
+            $boardStatus=$this->findStatus($board, $request->status);
             $this->changeStatus($boardStatus, $task);
         }
         return $task;
     }
 
     public function addUser($userId, Task $task) {
-        $user = User::find($userId);
-        if(!$user){
-            return response()->json(['success' => false, 'message'=>'User not found'], 400);
+        $user = User::findOrFail($userId);
+//        if(!$user){
+//            return response()->json(['success' => false, 'message'=>'User not found'], 400);
+//        }
+        if($task->users()->count() <2){
+            $task->users()->attach($user);
+            return $task;
         }
-        $task->users()->attach($user);
-        return response()->json(['success' => true], 200);
+        throw new ControllerException('bad request', 400);
+
     }
 
     public function deleteTaskUser($userId, Task $task) {
-        $user = User::find($userId);
-        if(!$user){
-            return response()->json(['success' => false, 'message'=>'User not found'], 400);
-        }
+        $user = User::findOrFail($userId);
+//        if(!$user){
+//            return response()->json(['success' => false, 'message'=>'User not found'], 400);
+//        }
         $task->users()->detach($user);
-        response()->json(['success' => true], 200);
+        return $task;
     }
 
     public function destroyTask(Task $task) {
         $task->delete();
+    }
+
+    public function addMark(Board $board, Task $task, $name)
+    {
+        $mark = $board->marks()->where('name', $name)->firstOrFail();
+        $task->marks()->attach($mark);
+        return $task;
+    }
+
+    public function deleteMark(Board $board, Task $task, $name)
+    {
+        $mark = $board->marks()->where('name', $name)->firstOrFail();
+        $task->marks()->detach($mark);
+        return $task;
     }
 }

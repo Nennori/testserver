@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Exceptions\ControllerException;
+use App\Models\Board;
+use App\Models\Task;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -30,9 +33,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
+
+        Route::model('board', Board::class, function () {
+            return new ControllerException('Not found', 404);
+        });
+
+        Route::model('task', Task::class, function () {
+            return new ControllerException('Not found', 404);
+        });
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
+
+use App\Models\Role;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class RolesTableSeeder extends Seeder
 {
@@ -9,16 +10,21 @@ class RolesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run() {
-        DB::table('roles')->insert([
-            'name' => 'owner',
-            'edit_board' => true,
-            'edit_task' => true
-        ]);
-        DB::table('roles')->insert([
-            'name' => 'user',
-            'edit_board' => false,
-            'edit_task' => true
-        ]);
+    public function run()
+    {
+        $role = Role::firstOrNew(['name' => 'owner']);
+        if (!$role->exists) {
+            $role->name = 'owner';
+            $role->edit_board = true;
+            $role->edit_task = true;
+            $role->save();
+        }
+        $role = Role::firstOrNew(['name' => 'user']);
+        if (!$role->exists) {
+            $role->name = 'user';
+            $role->edit_board = false;
+            $role->edit_task = true;
+            $role->save();
+        }
     }
 }
