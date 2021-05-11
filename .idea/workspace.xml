@@ -2,52 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b74127fc-bf91-4463-85ff-2dff1b4601cd" name="Default Changelist" comment="did refactoring">
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/API/UserController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/BoardCollection.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/BoardResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/MarkCollection.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/MarkResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/StatusCollection.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/StatusResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/TaskCollection.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/TaskResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/UserCollection.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Http/Resources/UserResource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Mark.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Providers/ResponseMacroServiceProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_04_20_025045_create_marks_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_04_20_030542_update_tasks_table_20042021.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_04_21_180059_update_task_user_table_21042021.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_05_04_100104_create_mark_user_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hosts/app.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hosts/default.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hosts/phppgadmin.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/projects/testserver/storage/logs/laravel.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Board.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Board.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/BoardUser.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Exceptions/Handler.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Exceptions/Handler.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/AuthController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/BoardController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/BoardController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/TaskController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/TaskController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Middleware/CheckToken.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Middleware/CheckToken.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Requests/TaskRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Requests/TaskRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Policies/BoardPolicy.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Policies/BoardPolicy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Policies/TaskPolicy.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Policies/TaskPolicy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/AuthServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/AuthServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Role.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Role.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/BoardCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/BoardCollection.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/BoardResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/BoardResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Services/BoardService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/BoardService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/TaskService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/TaskService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/UserService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/UserService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/SocialAccount.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/SocialAccount.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Status.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Status.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Task.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/app.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/auth.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/auth.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeds/RolesTableSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/RolesTableSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage/api-docs/api-docs.json" beforeDir="false" afterPath="$PROJECT_DIR$/storage/api-docs/api-docs.json" afterDir="false" />
     </list>
     <list id="1107852c-7ba1-4cd7-9ff0-13a4c0ab4f7e" name="TRDR-2 add readme" comment="" />
@@ -274,7 +241,13 @@
       <workItem from="1618855614451" duration="1517000" />
       <workItem from="1618885430620" duration="5236000" />
       <workItem from="1619021289119" duration="30214000" />
-      <workItem from="1620072706890" duration="22710000" />
+      <workItem from="1620072706890" duration="25696000" />
+      <workItem from="1620206869388" duration="809000" />
+      <workItem from="1620207753915" duration="1667000" />
+      <workItem from="1620324837982" duration="1781000" />
+      <workItem from="1620362761655" duration="1089000" />
+      <workItem from="1620718000022" duration="157000" />
+      <workItem from="1620727415423" duration="2962000" />
     </task>
     <task id="LOCAL-00001" summary="did refactoring">
       <created>1617174454783</created>
@@ -325,7 +298,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618385433728</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="RDR-2 fix BoardController, add marks">
+      <created>1620158859316</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1620158859316</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -342,7 +322,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/feature/TRDR-2" />
+                        <option value="feature/TRDR-2" />
                       </list>
                     </value>
                   </entry>
@@ -361,6 +341,7 @@
     <MESSAGE value="TRDR-1 fix authentication" />
     <MESSAGE value="TRDR-2 add readme" />
     <MESSAGE value="RDR-2 fix .env.example" />
-    <option name="LAST_COMMIT_MESSAGE" value="RDR-2 fix .env.example" />
+    <MESSAGE value="RDR-2 fix BoardController, add marks" />
+    <option name="LAST_COMMIT_MESSAGE" value="RDR-2 fix BoardController, add marks" />
   </component>
 </project>

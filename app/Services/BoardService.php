@@ -15,8 +15,8 @@ use \Illuminate\Http\JsonResponse;
 
 class BoardService
 {
-    public function getBoards(User $user): array {
-        return $user->boards->all();
+    public function getBoards(User $user) {
+        return $user->boards;
     }
 
     public function createBoard(BoardRequest $request, User $user) {

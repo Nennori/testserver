@@ -1887,7 +1887,7 @@
             },
             "delete": {
                 "tags": [
-                    "Mark"
+                    "Task"
                 ],
                 "summary": "Delete mark from the task",
                 "operationId": "deleteTaskMark",

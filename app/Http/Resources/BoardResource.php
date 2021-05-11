@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -35,7 +36,7 @@ class BoardResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -43,7 +44,8 @@ class BoardResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'users'=>UserResource::collection($this->users),
+            'users'=>$this->users,
+            'you'=>'pidor',
             'marks'=>MarkResource::collection($this->marks)
         ];
     }

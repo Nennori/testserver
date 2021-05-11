@@ -523,7 +523,7 @@ class TaskController extends BaseController
      *     path="/api/v1/boards/{boardId}/tasks/{taskId}/mark",
      *     operationId="deleteTaskMark",
      *     summary="Delete mark from the task",
-     *     tags={"Mark"},
+     *     tags={"Task"},
      *     security={ {"bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="boardId",

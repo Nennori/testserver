@@ -59,7 +59,7 @@ class BoardController extends BaseController
      * )
      */
     public function index() {
-        $response = new BoardCollection($this->boardService->getBoards(auth()->user()));
+        $response = new BoardCollection(Board::all());
         return response($response, 200);
     }
 
