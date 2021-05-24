@@ -26,8 +26,8 @@ RUN docker-php-ext-install pdo_pgsql mbstring zip exif pcntl
 # Куда же без composer'а.
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+#RUN groupadd -g 1000 www
+#RUN useradd -u 1000 -ms /bin/bash -g www www
 COPY . /var/www
 COPY --chown=www:www . /var/www
 # Добавим свой php.ini, можем в нем определять свои значения конфига
